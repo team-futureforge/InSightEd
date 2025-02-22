@@ -102,7 +102,10 @@ const Sidebar = ({ userRole = 'student' }) => {
     localStorage.removeItem("role");
 
     navigate("/");
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8aefd2f4955b5176100325bce77c5a877542c6aa
   };
 
   return (
