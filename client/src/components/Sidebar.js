@@ -72,11 +72,13 @@ const roleRoutes = {
     { path: '/student/complaints', label: 'File Complaint', icon: <Report /> },
     { path: '/student/health', label: 'Health Services', icon: <MedicalServices /> },
     { path: '/student/courses', label: 'Courses', icon: <School /> },
+    { path: '/student/cheatcase', label: 'Report Cheating', icon: <Report /> },
   ],
   authority: [
     { path: '/authority/exam', label: 'Exam Monitoring', icon: <AdminPanelSettings /> },
     { path: '/authority/events', label: 'Event Management', icon: <Event /> },
     { path: '/authority/feedback', label: 'Feedback', icon: <Feedback /> },
+    { path: '/authority/cheatcase', label: 'Report Cheating', icon: <Report /> },
   ]
 };
 
@@ -98,11 +100,9 @@ const Sidebar = ({ userRole = 'student' }) => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-<<<<<<< Updated upstream
+
     navigate("/");
-=======
-    navigate("/login");
->>>>>>> Stashed changes
+
   };
 
   return (
@@ -112,7 +112,7 @@ const Sidebar = ({ userRole = 'student' }) => {
         {commonRoutes.map((route) => (
           <SidebarItem 
             key={route.path}
-            button 
+            button={true} 
             onClick={() => handleNavigation(route.path)}
             selected={location.pathname === route.path}
           >
@@ -127,7 +127,7 @@ const Sidebar = ({ userRole = 'student' }) => {
         {roleRoutes[userRole]?.map((route) => (
           <SidebarItem 
             key={route.path}
-            button 
+            button={true} 
             onClick={() => handleNavigation(route.path)}
             selected={location.pathname.startsWith(route.path)}
           >
@@ -139,7 +139,7 @@ const Sidebar = ({ userRole = 'student' }) => {
         <Divider sx={{ backgroundColor: '#404060', my: 2 }} />
 
         {/* Logout */}
-        <SidebarItem button onClick={handleLogout}>
+        <SidebarItem button={true} onClick={handleLogout}>
           <SidebarIcon><ExitToApp /></SidebarIcon>
           <ListItemText primary="Logout" />
         </SidebarItem>

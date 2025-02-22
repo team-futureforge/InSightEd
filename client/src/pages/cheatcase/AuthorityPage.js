@@ -1,68 +1,82 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
 import "../../CSS/cheat.css";
 
 const AuthorityPage = () => {
-  const [name, setName] = useState("");
-  const [reason, setReason] = useState("");
-  const [proof, setProof] = useState(null);
-  const [records, setRecords] = useState([]);
-  const [showDialog, setShowDialog] = useState(false); // Dialog visibility
+  const [cases, setCases] = useState([]);
+  const navigate = useNavigate();
 
-  // Clear records on app start
   useEffect(() => {
-    if (sessionStorage.getItem("cleared") !== "true") {
-      localStorage.removeItem("cheatingRecords");
-      sessionStorage.setItem("cleared", "true");
-    }
-
-    const storedRecords = JSON.parse(localStorage.getItem("cheatingRecords")) || [];
-    setRecords(storedRecords);
+    const storedCases = JSON.parse(localStorage.getItem("cheatingCases")) || [];
+    setCases(storedCases);
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!name || !reason || !proof) {
-      alert("Please fill in all fields.");
-      return;
-    }
+  const handleApprove = (index) => {
+    const updatedCases = [...cases];
+    updatedCases[index].status = "approved";
+    setCases(updatedCases);
+    localStorage.setItem("cheatingCases", JSON.stringify(updatedCases));
 
-    const newRecord = { name, reason, proof };
-    const updatedRecords = [...records, newRecord];
+    alert("Case approved successfully!");
 
-    setRecords(updatedRecords);
-    localStorage.setItem("cheatingRecords", JSON.stringify(updatedRecords));
-
-    // Show success dialog
-    setShowDialog(true);
-
-    // Hide dialog after 3 seconds
-    setTimeout(() => setShowDialog(false), 3000);
-
-    // Clear the form
-    setName("");
-    setReason("");
-    setProof(null);
+    // Navigate to Student login page
+    navigate("/student/cheatcase");
   };
 
   return (
     <div style={{ display: 'flex' }}>
       <Sidebar />
       <div style={{ flexGrow: 1, padding: '20px' }}>
-        <h2 className="page-title">Authority Panel - Register Cheating Case</h2>
-        <form className="record-form" onSubmit={handleSubmit}>
-          <input type="text" placeholder="Student Name" value={name} onChange={(e) => setName(e.target.value)} required />
-          <input type="text" placeholder="Reason" value={reason} onChange={(e) => setReason(e.target.value)} required />
-          <input type="file" accept="image/*,.pdf" onChange={(e) => setProof(URL.createObjectURL(e.target.files[0]))} required />
-          <button type="submit">Register Complaint</button>
-        </form>
+        <Navbar />
+        <h2 className="page-title">Authority Panel - Review Cheating Cases</h2>
+        <div className="case-list">
+          {cases.map((caseItem, index) => (
+            <div key={index} className="case-item">
+              <p><strong>Invigilator:</strong> {caseItem.invigilatorName}</p>
+              <p><strong>Student:</strong> {caseItem.studentName}</p>
+              <p><strong>Description:</strong> {caseItem.description}</p>
+              <p><strong>Proof:</strong> <a href={caseItem.proof} target="_blank" rel="noopener noreferrer">View Proof</a></p>
+              <p><strong>Status:</strong> {caseItem.status}</p>
+              {caseItem.status === "pending" && (
+                <button onClick={() => handleApprove(index)}>Approve</button>
+              )}
+            </div>
+          ))}
+        </div>
 
-        {/* Dialog Box */}
-        {showDialog && (
-          <div className="dialog-box">
-            <p>Case has been successfully registered!</p>
-          </div>
-        )}
+        <style jsx>{`
+          .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+          }
+
+          .case-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          .case-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+          }
+
+          .case-item button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin-top: 10px;
+          }
+
+          .case-item button:hover {
+            background-color: #218838;
+          }
+        `}</style>
       </div>
     </div>
   );

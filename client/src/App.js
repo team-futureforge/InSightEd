@@ -36,6 +36,8 @@ const App = () => {
         <Route path="/admin-dashboard-es" element={<Layout userRole={userRole}><AdminDashboardES /></Layout>} />
         <Route path="/student-dashboard" element={<Layout userRole={userRole}><StudentDashboard /></Layout>} />
         <Route path="/health-form" element={<Layout userRole={userRole}><HealthForm /></Layout>} />
+        <Route path="/authority/cheatcase" element={<AuthorityPage />} />
+        <Route path="/student/cheatcase" element={<StudentPage />} />
       </Routes>
     </Router>
   );

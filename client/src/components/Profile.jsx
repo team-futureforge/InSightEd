@@ -36,7 +36,7 @@ const Profile = ({ userRole }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/me', {
+        const response = await axios.get('http://localhost:5000/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         });
         setProfile(response.data);
